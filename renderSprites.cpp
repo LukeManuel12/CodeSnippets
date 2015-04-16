@@ -39,3 +39,37 @@ void renderSprites()
 		renderSprite(&sprites[i]);
 	}
 }
+void renderText()
+{	
+	int i;
+	for(i=0;i< MAX_TEXT_SPRITES;i++)
+	{
+		if(!text_sprites[i].used)
+			continue;
+		RECT rect = RECT();
+		rect.left = (int)text_sprites[i].x + BORDER_X;
+		rect.right = (int)(text_sprites[i].x + WINDOW_WIDTH) + BORDER_X;
+		rect.top = (int)text_sprites[i].y + BORDER_Y;
+		rect.bottom = (int)(text_sprites[i].y + WINDOW_HEIGHT) + BORDER_Y;
+		text_sprites[i].font->DrawTextA(gSprite[LAYER_TEXT], text_sprites[i].str, strlen(text_sprites[i].str), &rect, DT_LEFT, D3DCOLOR_XRGB((int)text_sprites[i].r,(int) text_sprites[i].g, (int)text_sprites[i].b));
+	}	
+}
+void render()
+{
+	gD3dDevice->BeginScene();
+	clearScreen(0,0,0);
+
+	int i;
+	for(i = 0; i < MAX_LAYERS;i++)
+	{
+		gSprite[i]->Begin(D3DXSPRITE_ALPHABLEND);
+	}
+	renderText();
+	renderSprites();
+	for(i = 0; i < MAX_LAYERS;i++)
+	{
+		gSprite[i]->End();
+	}
+	gD3dDevice->EndScene();
+	gD3dDevice->Present( NULL, NULL, NULL, NULL );
+}
